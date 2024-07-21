@@ -4,12 +4,14 @@ import com.example.demoshoppingreceipt.Exception.CustomizationInternalException;
 import com.example.demoshoppingreceipt.Exception.LocationDataNotFoundException;
 import com.example.demoshoppingreceipt.Exception.RequestFormatException;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.lucene.util.English;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -81,8 +83,8 @@ public class InvoiceController {
 
                 price = Double.parseDouble(detail.split(" at ")[1].trim());
                 qty = Integer.parseInt(detail.split(" at ")[0].replaceAll("\\D", ""));
-                item = detail.split(" at ")[0].replace(qty.toString(), "").trim();
-                response.getWriter().write(String.format("%-20s", item) + String.format("%8s", "$" + price.toString()) + String.format("%16s", qty.toString()) + "\n");
+                item =  pluralizeChange(detail.split(" at ")[0].replace(qty.toString(), "").trim());
+                response.getWriter().write(String.format("%-20s",item) + String.format("%8s", "$" + price.toString()) + String.format("%16s", qty.toString()) + "\n");
 
                 if (Location.equals("ca")) {
                     subtotalList.add(price * qty);
@@ -122,5 +124,12 @@ public class InvoiceController {
         } else {
             return df.format(obj).toString();
         }
+    }
+
+    public String pluralizeChange(String word) {
+        PorterStemmer stemmer = new PorterStemmer();
+        stemmer.setCurrent(word);
+        stemmer.stem();
+        return stemmer.getCurrent();
     }
 }
