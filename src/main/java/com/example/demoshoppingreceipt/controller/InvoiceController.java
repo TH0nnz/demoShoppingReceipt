@@ -1,10 +1,9 @@
 package com.example.demoshoppingreceipt.controller;
 
-import com.example.demoshoppingreceipt.Exception.CustomizationInternalException;
+import com.example.demoshoppingreceipt.Exception.CustomizationException;
 import com.example.demoshoppingreceipt.Exception.LocationDataNotFoundException;
 import com.example.demoshoppingreceipt.Exception.RequestFormatException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.lucene.util.English;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -48,6 +47,11 @@ public class InvoiceController {
     @GetMapping("/invoice/{inputString}")
     public void calcInvoice(HttpServletResponse response, @PathVariable("inputString") String inputString) {
 
+        String regex = "(Location:)\\s[a-zA-Z]*((,)\\s[0-9]\\s[a-zA-Z\\s]*\\s(at)\\s[0-9.]*)*";
+        if (!Pattern.matches(regex, inputString)) {
+            throw new RequestFormatException("Input Data Format Error!");
+        }
+
         String[] DataArray = inputString.toLowerCase().split(",");
         String Location = DataArray[0].split(":")[1].trim();
 
@@ -56,10 +60,7 @@ public class InvoiceController {
             throw new LocationDataNotFoundException("Location Data Not Found!");
         }
 
-        String regex = "(Location:)\\s[a-zA-Z]*((,)\\s[0-9]\\s[a-zA-Z\\s]*\\s(at)\\s[0-9.]*)*";
-        if (!Pattern.matches(regex, inputString)) {
-            throw new RequestFormatException("Input Data Format Error!");
-        }
+
 
         List<Double> subtotalList = new ArrayList<>();
         List<Double> taxList = new ArrayList<>();
@@ -105,7 +106,7 @@ public class InvoiceController {
             response.getWriter().write(String.format("%-20s", "tax:") + String.format("%9s", "") + String.format("%16s", "$" + tax_string + "\n"));
             response.getWriter().write(String.format("%-20s", "total:") + String.format("%9s", "") + String.format("%16s", "$" + tot_string + "\n"));
         } catch (IOException ex) {
-            throw new CustomizationInternalException("Internal Error!");
+            throw new CustomizationException("Internal Error!");
         }
     }
 
