@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @Version 1.0
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public class CustomizationInternalException extends RuntimeException {
+public class CustomizationException extends RuntimeException {
     private String message;
-    public CustomizationInternalException(String message) {
+    public CustomizationException(String message) {
         this.message=message;
     }
 

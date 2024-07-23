@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * @Version 1.0
  */
 @ControllerAdvice
-public class TestExceptionHandler {
+public class MyExceptionHandler {
 
     @ExceptionHandler(LocationDataNotFoundException.class)
     public Object LocationDataNotFoundExceptionHandler(LocationDataNotFoundException e) {
@@ -29,9 +29,10 @@ public class TestExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(o_message);
     }
 
-    @ExceptionHandler(CustomizationInternalException.class)
-    public Object CustomizationInternalExceptionHandler(CustomizationInternalException e) {
+    @ExceptionHandler(CustomizationException.class)
+    public Object CustomizationExceptionHandler(CustomizationException e) {
         String o_message = e.getMessage();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(o_message);
     }
+
 }
