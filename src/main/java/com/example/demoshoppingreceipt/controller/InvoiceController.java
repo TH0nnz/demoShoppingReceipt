@@ -47,7 +47,9 @@ public class InvoiceController {
     @GetMapping("/invoice/{inputString}")
     public void calcInvoice(HttpServletResponse response, @PathVariable("inputString") String inputString) {
 
-        String regex = "(Location:)\\s[a-zA-Z]*((,)\\s[0-9]\\s[a-zA-Z\\s]*\\s(at)\\s[0-9.]*)*";
+
+
+        String regex = "(Location:)\\s[a-zA-Z]*((,)\\s[0-9]*\\s[a-zA-Z\\s]*\\s(at)\\s[0-9.]*)*";
         if (!Pattern.matches(regex, inputString)) {
             throw new RequestFormatException("Input Data Format Error!");
         }
@@ -112,7 +114,7 @@ public class InvoiceController {
 
 
     private BigDecimal roundup(Double input) {
-        BigDecimal base = BigDecimal.valueOf(Math.round(input / 0.05));
+        BigDecimal base = BigDecimal.valueOf(Math.ceil(input / 0.05));
         return base.multiply(new BigDecimal(0.05));
     }
 
