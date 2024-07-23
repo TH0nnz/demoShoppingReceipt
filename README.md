@@ -6,3 +6,6 @@ http://localhost:8080/invoice/Location: TW, 1 book at 17.99, 1 potato chips at 3
 <br>
 Input Data Format Error!</p>
 http://localhost:8080/invoice/Location: NY,1 book at 17.99, 1 potato chips at 3.99</p>
+<br>
+Function Not Found!</p>
+http://localhost:8080/invoice1/Location: NY,1 book at 17.99, 1 potato chips at 3.99</p>
